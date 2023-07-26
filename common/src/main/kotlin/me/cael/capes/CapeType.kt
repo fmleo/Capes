@@ -1,11 +1,12 @@
 package me.cael.capes
 
 import com.mojang.authlib.GameProfile
+import me.cael.capes.utils.MeteorUtils
 import net.minecraft.screen.ScreenTexts
 import net.minecraft.text.Text
 
 enum class CapeType(val stylized: String) {
-    MINECRAFT("Minecraft"), OPTIFINE("OptiFine"), LABYMOD("LabyMod"), WYNNTILS("Wynntils"), MINECRAFTCAPES("MinecraftCapes"), COSMETICA("Cosmetica"), CLOAKSPLUS("Cloaks+");
+    MINECRAFT("Minecraft"), OPTIFINE("OptiFine"), LABYMOD("LabyMod"), WYNNTILS("Wynntils"), MINECRAFTCAPES("MinecraftCapes"), COSMETICA("Cosmetica"), CLOAKSPLUS("Cloaks+"), METEOR("MeteorClient");
 
     fun cycle() = when(this) {
         MINECRAFT -> OPTIFINE
@@ -14,7 +15,8 @@ enum class CapeType(val stylized: String) {
         WYNNTILS -> COSMETICA
         COSMETICA -> MINECRAFTCAPES
         MINECRAFTCAPES -> CLOAKSPLUS
-        CLOAKSPLUS -> MINECRAFT
+        CLOAKSPLUS -> METEOR
+        METEOR -> MINECRAFT
     }
 
     fun getURL(profile: GameProfile): String? {
@@ -26,6 +28,7 @@ enum class CapeType(val stylized: String) {
             COSMETICA -> if(config.enableCosmetica) "https://api.cosmetica.cc/get/cloak?username=${profile.name}&uuid=${profile.id}&nothirdparty" else null
             MINECRAFTCAPES -> if(config.enableMinecraftCapesMod) "https://api.minecraftcapes.net/profile/${profile.id.toString().replace("-", "")}" else null
             CLOAKSPLUS -> if(config.enableCloaksPlus) "http://161.35.130.99/capes/${profile.name}.png" else null
+            METEOR -> if(config.enableMeteor) "https://meteorclient.com/capes/${MeteorUtils().getAccountByUuid(profile.id)}.png" else null
             MINECRAFT -> null
         }
     }
